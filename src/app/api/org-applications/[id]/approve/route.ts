@@ -1,0 +1,17 @@
+import { NextRequest, NextResponse } from "next/server";
+import { getAuthContext } from "@/lib/auth";
+import { approveOrgApplication } from "@/lib/api/org-applications";
+import { revalidatePath } from "next/cache";
+
+export async function POST(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  try {
+    const ctx = await getAuthContext();
+    const result = await approveOrgApplication(ctx, id);
+    revalidatePath("/org-applications");
+    return NextResponse.json(result);
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "error";
+    return NextResponse.json({ error: msg }, { status: 500 });
+  }
+}
