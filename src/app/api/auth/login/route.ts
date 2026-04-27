@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   const cookieOpts = {
     httpOnly: true,
     secure: SECURE,
-    sameSite: "lax" as const,
+    sameSite: "strict" as const,
     maxAge: MAX_AGE,
     path: "/",
   };
