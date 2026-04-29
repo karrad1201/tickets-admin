@@ -4,6 +4,7 @@ import { SearchFilter } from "@/components/search-filter";
 import { StatusBadge } from "@/components/status-badge";
 import { User } from "@/lib/api/types";
 import Link from "next/link";
+import { CreateUserForm } from "./create-user-form";
 
 export default async function UsersPage() {
   const ctx = await getAuthContext();
@@ -11,7 +12,10 @@ export default async function UsersPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold mb-6">Пользователи</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-semibold">Пользователи</h1>
+        <CreateUserForm />
+      </div>
       {users.length === 0 ? (
         <p className="text-muted-foreground">Пользователей нет.</p>
       ) : (

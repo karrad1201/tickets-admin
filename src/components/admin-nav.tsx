@@ -15,6 +15,7 @@ const NAV = [
   { href: "/users", label: "Пользователи", icon: "👤" },
   { href: "/operations", label: "Операции", icon: "⚙️" },
   { href: "/analytics", label: "Аналитика", icon: "📊" },
+  { href: "/settings", label: "Настройки", icon: "🔑" },
 ];
 
 export function AdminNav() {
