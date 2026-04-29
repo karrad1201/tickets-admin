@@ -1,6 +1,7 @@
 import { getAuthContext } from "@/lib/auth";
 import { listOrganizations } from "@/lib/api/organizations";
 import Link from "next/link";
+import { CreateOrganizationForm } from "./create-org-form";
 
 export default async function OrganizationsPage() {
   const ctx = await getAuthContext();
@@ -8,7 +9,10 @@ export default async function OrganizationsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold mb-6">Организации</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-semibold">Организации</h1>
+        <CreateOrganizationForm />
+      </div>
       {orgs.length === 0 ? (
         <p className="text-muted-foreground">Организаций нет.</p>
       ) : (
