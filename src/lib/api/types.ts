@@ -44,11 +44,23 @@ export interface Venue {
 
 export interface Event {
   id: string;
-  title: string;
+  label: string;
+  description: string;
   venueId: string;
+  categoryId: string;
+  time: string;
+  organizationId?: string;
   salesClosedAt?: string;
-  startsAt: string;
-  status?: string;
+  imageUrl?: string;
+  minPrice?: number;
+  ageRating?: string;
+  hasSeatMap: boolean;
+}
+
+export interface Category {
+  id: string;
+  code: string;
+  label: string;
 }
 
 export interface User {
