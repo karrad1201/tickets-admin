@@ -30,8 +30,8 @@ export default async function AnalyticsPage() {
 
   const eventsOpenSales = events.filter((e) => !e.salesClosedAt).length;
   const eventsClosedSales = events.filter((e) => !!e.salesClosedAt).length;
-  const eventsUpcoming = events.filter((e) => e.startsAt > now).length;
-  const eventsPast = events.filter((e) => e.startsAt <= now).length;
+  const eventsUpcoming = events.filter((e) => e.time > now).length;
+  const eventsPast = events.filter((e) => e.time <= now).length;
 
   const usersAdmin = users.filter((u) => u.role === "ADMIN").length;
   const usersRegular = users.length - usersAdmin;

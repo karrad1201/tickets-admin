@@ -9,6 +9,7 @@ const NAV = [
   { href: "/organizations", label: "Организации" },
   { href: "/venues", label: "Площадки" },
   { href: "/events", label: "События" },
+  { href: "/categories", label: "Категории" },
   { href: "/users", label: "Пользователи" },
   { href: "/operations", label: "Операции" },
   { href: "/analytics", label: "Аналитика" },

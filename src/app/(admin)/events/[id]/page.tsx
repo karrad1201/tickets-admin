@@ -1,6 +1,8 @@
 import { getAuthContext } from "@/lib/auth";
 import { getEvent } from "@/lib/api/events";
 import { getVenue } from "@/lib/api/venues";
+import { getCategory } from "@/lib/api/categories";
+import { getOrganization } from "@/lib/api/organizations";
 import { CloseEventSalesButton } from "./close-sales-button";
 import Link from "next/link";
 
@@ -9,7 +11,11 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
   const ctx = await getAuthContext();
   const event = await getEvent(ctx, id);
 
-  const venue = await getVenue(ctx, event.venueId).catch(() => null);
+  const [venue, category, organization] = await Promise.all([
+    getVenue(ctx, event.venueId).catch(() => null),
+    getCategory(ctx, event.categoryId).catch(() => null),
+    event.organizationId ? getOrganization(ctx, event.organizationId).catch(() => null) : Promise.resolve(null),
+  ]);
 
   return (
     <div className="max-w-2xl">
@@ -18,11 +24,11 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
           ← События
         </Link>
       </div>
-      <h1 className="text-2xl font-semibold mb-6">{event.title}</h1>
+      <h1 className="text-2xl font-semibold mb-6">{event.label}</h1>
       <div className="rounded-md border divide-y text-sm mb-6">
         <Row label="ID" value={event.id} mono />
         <div className="flex px-4 py-3 gap-4">
-          <span className="w-32 shrink-0 text-muted-foreground">Площадка</span>
+          <span className="w-40 shrink-0 text-muted-foreground">Площадка</span>
           {venue ? (
             <Link href={`/venues/${venue.id}`} className="hover:underline font-medium">
               {venue.label}
@@ -31,11 +37,38 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
             <span className="font-mono text-xs text-muted-foreground">{event.venueId}</span>
           )}
         </div>
-        <Row label="Начало" value={event.startsAt.slice(0, 16).replace("T", " ")} />
+        <div className="flex px-4 py-3 gap-4">
+          <span className="w-40 shrink-0 text-muted-foreground">Категория</span>
+          {category ? (
+            <Link href={`/categories/${category.id}`} className="hover:underline">
+              {category.label}
+            </Link>
+          ) : (
+            <span className="font-mono text-xs text-muted-foreground">{event.categoryId}</span>
+          )}
+        </div>
+        {organization && (
+          <div className="flex px-4 py-3 gap-4">
+            <span className="w-40 shrink-0 text-muted-foreground">Организация</span>
+            <Link href={`/organizations/${organization.id}`} className="hover:underline font-medium">
+              {organization.name}
+            </Link>
+          </div>
+        )}
+        <Row label="Начало" value={event.time.slice(0, 16).replace("T", " ")} />
         <Row
           label="Продажи"
           value={event.salesClosedAt ? `Закрыты ${event.salesClosedAt.slice(0, 10)}` : "Открыты"}
         />
+        {event.ageRating && <Row label="Возраст" value={event.ageRating} />}
+        {event.minPrice != null && <Row label="Цена от" value={`${event.minPrice} ₽`} />}
+        <Row label="Тип мест" value={event.hasSeatMap ? "Схема зала" : "Свободный вход"} />
+        {event.description && (
+          <div className="flex px-4 py-3 gap-4">
+            <span className="w-40 shrink-0 text-muted-foreground">Описание</span>
+            <span className="text-sm leading-relaxed">{event.description}</span>
+          </div>
+        )}
       </div>
       {!event.salesClosedAt && <CloseEventSalesButton id={event.id} />}
     </div>
@@ -45,7 +78,7 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
 function Row({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
     <div className="flex px-4 py-3 gap-4">
-      <span className="w-32 shrink-0 text-muted-foreground">{label}</span>
+      <span className="w-40 shrink-0 text-muted-foreground">{label}</span>
       <span className={mono ? "font-mono text-xs break-all" : ""}>{value}</span>
     </div>
   );
