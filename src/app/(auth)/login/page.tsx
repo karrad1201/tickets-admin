@@ -7,8 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const BASE = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8080";
-
 export default function LoginPage() {
   const router = useRouter();
   const [phone, setPhone] = useState("");
@@ -20,7 +18,7 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${BASE}/admin/auth/login`, {
+      const res = await fetch(`/api/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phone, password }),
