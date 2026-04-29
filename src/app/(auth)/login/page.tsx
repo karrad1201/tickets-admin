@@ -39,18 +39,18 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${BASE}/auth/verify-code`, {
+      const res = await fetch(`${BASE}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phone, code }),
       });
       if (!res.ok) throw new Error(await res.text());
-      const { token, userId } = await res.json();
+      const { accessToken, refreshToken, user } = await res.json();
 
       const saveRes = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, userId }),
+        body: JSON.stringify({ accessToken, refreshToken, userId: user.id }),
       });
       if (!saveRes.ok) throw new Error("Не удалось сохранить сессию");
       router.push("/dashboard");
