@@ -37,18 +37,27 @@ export default async function VenueApplicationPage({ params }: { params: Promise
         <div className="mb-6">
           <h2 className="text-sm font-medium mb-2">Документы ({app.documentUrls.length})</h2>
           <ul className="space-y-1">
-            {app.documentUrls.map((url, i) => (
-              <li key={i}>
-                <a
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-primary hover:underline break-all"
-                >
-                  {url.split("/").pop() ?? `Документ ${i + 1}`}
-                </a>
-              </li>
-            ))}
+            {app.documentUrls.map((url, i) => {
+              const safe = isSafeUrl(url);
+              return (
+                <li key={i}>
+                  {safe ? (
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:underline break-all"
+                    >
+                      {url.split("/").pop() ?? `Документ ${i + 1}`}
+                    </a>
+                  ) : (
+                    <span className="text-sm text-muted-foreground break-all" title="Небезопасный URL">
+                      {url.split("/").pop() ?? `Документ ${i + 1}`}
+                    </span>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}
@@ -56,6 +65,15 @@ export default async function VenueApplicationPage({ params }: { params: Promise
       {app.status === "PENDING" && <VenueApplicationActions id={app.id} />}
     </div>
   );
+}
+
+function isSafeUrl(url: string): boolean {
+  try {
+    const { protocol } = new URL(url);
+    return protocol === "https:" || protocol === "http:";
+  } catch {
+    return false;
+  }
 }
 
 function Row({ label, value, mono }: { label: string; value: React.ReactNode; mono?: boolean }) {

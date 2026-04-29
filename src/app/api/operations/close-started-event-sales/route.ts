@@ -9,6 +9,7 @@ export async function POST() {
     return NextResponse.json(result);
   } catch (e) {
     const msg = e instanceof Error ? e.message : "error";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    const status = e instanceof Error && "status" in e ? (e as { status: number }).status : 500;
+    return NextResponse.json({ error: msg }, { status });
   }
 }
