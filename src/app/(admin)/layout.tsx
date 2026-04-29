@@ -11,6 +11,7 @@ const NAV = [
   { href: "/events", label: "События" },
   { href: "/users", label: "Пользователи" },
   { href: "/operations", label: "Операции" },
+  { href: "/analytics", label: "Аналитика" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
