@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const PUBLIC_PATHS = ["/login", "/api/auth/login", "/api/auth/logout", "/api/health"];
+const PUBLIC_PATHS = ["/login", "/api/auth/login", "/api/auth/logout", "/api/auth/refresh", "/api/health"];
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -8,10 +8,17 @@ export function middleware(req: NextRequest) {
 
   const token = req.cookies.get("auth_token")?.value;
   if (!token) {
-    const loginUrl = req.nextUrl.clone();
-    loginUrl.pathname = "/login";
-    return NextResponse.redirect(loginUrl);
+    return NextResponse.redirect(new URL("/login", req.url));
   }
+
+  // Если access token истекает в ближайшие 30 секунд — обновляем через refresh route
+  const expiresAt = Number(req.cookies.get("token_expires_at")?.value ?? "0");
+  if (expiresAt && Date.now() / 1000 > expiresAt) {
+    const refreshUrl = new URL("/api/auth/refresh", req.url);
+    refreshUrl.searchParams.set("next", pathname);
+    return NextResponse.redirect(refreshUrl);
+  }
+
   return NextResponse.next();
 }
 
