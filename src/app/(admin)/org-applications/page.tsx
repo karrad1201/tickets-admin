@@ -5,12 +5,20 @@ import Link from "next/link";
 
 export default async function OrgApplicationsPage() {
   const ctx = await getAuthContext();
-  const apps = await listOrgApplications(ctx);
+  let apps: Awaited<ReturnType<typeof listOrgApplications>> = [];
+  let error: string | null = null;
+  try {
+    apps = await listOrgApplications(ctx);
+  } catch (e) {
+    error = e instanceof Error ? e.message : "Ошибка загрузки";
+  }
 
   return (
     <div>
       <h1 className="text-2xl font-semibold mb-6">Заявки на организации</h1>
-      {apps.length === 0 ? (
+      {error ? (
+        <p className="text-destructive">{error}</p>
+      ) : apps.length === 0 ? (
         <p className="text-muted-foreground">Заявок нет.</p>
       ) : (
         <div className="rounded-md border overflow-hidden">

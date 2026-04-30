@@ -10,7 +10,13 @@ export default async function VenueApplicationsPage({
 }) {
   const { status } = await searchParams;
   const ctx = await getAuthContext();
-  const apps = await listVenueApplications(ctx, status);
+  let apps: Awaited<ReturnType<typeof listVenueApplications>> = [];
+  let error: string | null = null;
+  try {
+    apps = await listVenueApplications(ctx, status);
+  } catch (e) {
+    error = e instanceof Error ? e.message : "Ошибка загрузки";
+  }
 
   const filters = [
     { label: "Все", value: undefined },
@@ -39,7 +45,9 @@ export default async function VenueApplicationsPage({
         ))}
       </div>
 
-      {apps.length === 0 ? (
+      {error ? (
+        <p className="text-destructive">{error}</p>
+      ) : apps.length === 0 ? (
         <p className="text-muted-foreground">Заявок нет.</p>
       ) : (
         <div className="rounded-md border overflow-hidden">
