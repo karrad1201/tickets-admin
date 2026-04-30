@@ -3,7 +3,7 @@ import { getOrganization, listOrgMembers } from "@/lib/api/organizations";
 import { getUser } from "@/lib/api/users";
 import { StatusBadge } from "@/components/status-badge";
 import Link from "next/link";
-import { OrgMember, User } from "@/lib/api/types";
+import { OrgMember, Organization, User } from "@/lib/api/types";
 
 export default async function OrganizationPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
