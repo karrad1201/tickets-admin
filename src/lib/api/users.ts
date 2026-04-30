@@ -12,3 +12,9 @@ export const listUserMemberships = (ctx: AuthContext, userId: string) =>
   apiFetch<OrgMember[]>(`/api/v1/organization-members?userId=${userId}`, backendHeaders(ctx), {
     cache: "no-store",
   });
+
+export const patchUserRole = (ctx: AuthContext, userId: string, role: string) =>
+  apiFetch<User>(`/api/v1/users/${userId}/role`, backendHeaders(ctx), {
+    method: "PATCH",
+    body: JSON.stringify({ role }),
+  });

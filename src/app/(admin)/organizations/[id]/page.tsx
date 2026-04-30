@@ -8,7 +8,24 @@ import { OrgMember, User } from "@/lib/api/types";
 export default async function OrganizationPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const ctx = await getAuthContext();
-  const [org, members] = await Promise.all([getOrganization(ctx, id), listOrgMembers(ctx, id)]);
+
+  let org: Organization;
+  let members: OrgMember[] = [];
+  try {
+    [org, members] = await Promise.all([getOrganization(ctx, id), listOrgMembers(ctx, id)]);
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "Ошибка загрузки";
+    return (
+      <div className="max-w-2xl">
+        <div className="mb-4">
+          <Link href="/organizations" className="text-sm text-muted-foreground hover:underline">
+            ← Организации
+          </Link>
+        </div>
+        <p className="text-destructive">{msg}</p>
+      </div>
+    );
+  }
 
   // Загружаем имена пользователей параллельно, fallback на UUID при ошибке
   const userMap = new Map<string, User>();
