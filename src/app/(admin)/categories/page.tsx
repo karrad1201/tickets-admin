@@ -5,7 +5,13 @@ import { CreateCategoryForm } from "./create-form";
 
 export default async function CategoriesPage() {
   const ctx = await getAuthContext();
-  const categories = await listCategories(ctx);
+  let categories: Awaited<ReturnType<typeof listCategories>> = [];
+  let error: string | null = null;
+  try {
+    categories = await listCategories(ctx);
+  } catch (e) {
+    error = e instanceof Error ? e.message : "Ошибка загрузки";
+  }
 
   return (
     <div>
@@ -15,7 +21,9 @@ export default async function CategoriesPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
-          {categories.length === 0 ? (
+          {error ? (
+            <p className="text-destructive">{error}</p>
+          ) : categories.length === 0 ? (
             <p className="text-muted-foreground">Категорий нет.</p>
           ) : (
             <div className="rounded-md border overflow-hidden">

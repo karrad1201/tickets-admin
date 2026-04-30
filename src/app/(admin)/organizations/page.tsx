@@ -5,7 +5,13 @@ import { CreateOrganizationForm } from "./create-org-form";
 
 export default async function OrganizationsPage() {
   const ctx = await getAuthContext();
-  const orgs = await listOrganizations(ctx);
+  let orgs: Awaited<ReturnType<typeof listOrganizations>> = [];
+  let error: string | null = null;
+  try {
+    orgs = await listOrganizations(ctx);
+  } catch (e) {
+    error = e instanceof Error ? e.message : "Ошибка загрузки";
+  }
 
   return (
     <div>
@@ -13,7 +19,9 @@ export default async function OrganizationsPage() {
         <h1 className="text-2xl font-semibold">Организации</h1>
         <CreateOrganizationForm />
       </div>
-      {orgs.length === 0 ? (
+      {error ? (
+        <p className="text-destructive">{error}</p>
+      ) : orgs.length === 0 ? (
         <p className="text-muted-foreground">Организаций нет.</p>
       ) : (
         <div className="rounded-md border overflow-hidden">

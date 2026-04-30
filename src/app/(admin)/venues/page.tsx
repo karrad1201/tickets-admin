@@ -4,12 +4,20 @@ import Link from "next/link";
 
 export default async function VenuesPage() {
   const ctx = await getAuthContext();
-  const venues = await listVenues(ctx);
+  let venues: Awaited<ReturnType<typeof listVenues>> = [];
+  let error: string | null = null;
+  try {
+    venues = await listVenues(ctx);
+  } catch (e) {
+    error = e instanceof Error ? e.message : "Ошибка загрузки";
+  }
 
   return (
     <div>
       <h1 className="text-2xl font-semibold mb-6">Площадки</h1>
-      {venues.length === 0 ? (
+      {error ? (
+        <p className="text-destructive">{error}</p>
+      ) : venues.length === 0 ? (
         <p className="text-muted-foreground">Площадок нет.</p>
       ) : (
         <div className="rounded-md border overflow-hidden">
