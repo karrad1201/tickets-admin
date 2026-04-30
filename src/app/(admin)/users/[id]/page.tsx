@@ -2,16 +2,33 @@ import { getAuthContext } from "@/lib/auth";
 import { getUser, listUserMemberships } from "@/lib/api/users";
 import { getOrganization } from "@/lib/api/organizations";
 import { StatusBadge } from "@/components/status-badge";
+import { ChangeRoleButton } from "./change-role-button";
 import Link from "next/link";
 
 export default async function UserPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const ctx = await getAuthContext();
 
-  const [user, memberships] = await Promise.all([
-    getUser(ctx, id),
-    listUserMemberships(ctx, id).catch(() => []),
-  ]);
+  let user: Awaited<ReturnType<typeof getUser>>;
+  let memberships: Awaited<ReturnType<typeof listUserMemberships>> = [];
+  try {
+    [user, memberships] = await Promise.all([
+      getUser(ctx, id),
+      listUserMemberships(ctx, id).catch(() => []),
+    ]);
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "Ошибка загрузки";
+    return (
+      <div className="max-w-2xl">
+        <div className="mb-4">
+          <Link href="/users" className="text-sm text-muted-foreground hover:underline">
+            ← Пользователи
+          </Link>
+        </div>
+        <p className="text-destructive">{msg}</p>
+      </div>
+    );
+  }
 
   const orgsById = Object.fromEntries(
     await Promise.all(
@@ -35,9 +52,12 @@ export default async function UserPage({ params }: { params: Promise<{ id: strin
         <Row label="ID" value={user.id} mono />
         <Row label="Телефон" value={user.phone ?? "—"} />
         <Row label="Email" value={user.email ?? "—"} />
-        <div className="flex px-4 py-3 gap-4">
+        <div className="flex px-4 py-3 gap-4 items-center">
           <span className="w-32 shrink-0 text-muted-foreground">Роль</span>
-          <StatusBadge status={user.role} />
+          <div className="flex items-center gap-3">
+            <StatusBadge status={user.role} />
+            <ChangeRoleButton userId={user.id} currentRole={user.role} />
+          </div>
         </div>
       </div>
 
