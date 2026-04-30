@@ -24,7 +24,7 @@ export default async function OrgApplicationPage({ params }: { params: Promise<{
       <div className="rounded-md border divide-y text-sm mb-6">
         <Row label="ID заявки" value={app.id} mono />
         <Row label="Заявитель" value={app.applicantUserId} mono />
-        <Row label="Дата подачи" value={app.createdAt.slice(0, 10)} />
+        <Row label="Дата подачи" value={app.createdAt?.slice(0, 10) ?? "—"} />
         <Row label="Статус" value={<StatusBadge status={app.status} />} />
       </div>
 

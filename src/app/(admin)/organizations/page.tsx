@@ -40,7 +40,7 @@ export default async function OrganizationsPage() {
                       {org.name}
                     </Link>
                   </td>
-                  <td className="px-4 py-3 text-muted-foreground">{org.createdAt.slice(0, 10)}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{org.createdAt?.slice(0, 10) ?? "—"}</td>
                 </tr>
               ))}
             </tbody>

@@ -36,7 +36,7 @@ export default async function OrganizationPage({ params }: { params: Promise<{ i
         </div>
         <div className="flex px-4 py-3 gap-4">
           <span className="w-32 shrink-0 text-muted-foreground">Создана</span>
-          <span>{org.createdAt.slice(0, 10)}</span>
+          <span>{org.createdAt?.slice(0, 10) ?? "—"}</span>
         </div>
       </div>
 
