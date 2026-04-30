@@ -13,6 +13,6 @@ export const getOrganization = (ctx: AuthContext, id: string) =>
   });
 
 export const listOrgMembers = (ctx: AuthContext, orgId: string) =>
-  apiFetch<OrgMember[]>(`/api/v1/organizations/${orgId}/members`, backendHeaders(ctx), {
+  apiFetch<OrgMember[]>(`/api/v1/organization-members?organizationId=${orgId}`, backendHeaders(ctx), {
     cache: "no-store",
   });
