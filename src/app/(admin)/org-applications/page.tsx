@@ -40,7 +40,7 @@ export default async function OrgApplicationsPage() {
                     </Link>
                   </td>
                   <td className="px-4 py-3 text-muted-foreground font-mono text-xs">{app.applicantUserId}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{app.createdAt.slice(0, 10)}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{app.createdAt?.slice(0, 10) ?? "—"}</td>
                   <td className="px-4 py-3">
                     <StatusBadge status={app.status} />
                   </td>

@@ -71,7 +71,7 @@ export default async function VenueApplicationsPage({
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">{app.cityLabel}</td>
                   <td className="px-4 py-3 text-muted-foreground">{app.documentUrls.length}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{app.createdAt.slice(0, 10)}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{app.createdAt?.slice(0, 10) ?? "—"}</td>
                   <td className="px-4 py-3">
                     <StatusBadge status={app.status} />
                   </td>

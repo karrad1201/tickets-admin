@@ -29,7 +29,7 @@ export default async function VenueApplicationPage({ params }: { params: Promise
         {app.description && <Row label="Описание" value={app.description} />}
         <Row label="Организация" value={app.organizationId} mono />
         <Row label="Заявитель" value={app.applicantUserId} mono />
-        <Row label="Дата подачи" value={app.createdAt.slice(0, 10)} />
+        <Row label="Дата подачи" value={app.createdAt?.slice(0, 10) ?? "—"} />
         {app.venueId && <Row label="Созданная площадка" value={app.venueId} mono />}
       </div>
 
