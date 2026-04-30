@@ -12,6 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { normalizePhone } from "@/lib/utils";
 
 export function CreateUserForm() {
   const router = useRouter();
@@ -28,7 +29,7 @@ export function CreateUserForm() {
       const res = await fetch("/api/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullName, phone: phone || undefined }),
+        body: JSON.stringify({ fullName, phone: phone ? normalizePhone(phone) : undefined }),
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
