@@ -2,6 +2,8 @@ import { getAuthContext } from "@/lib/auth";
 import { getOrganization, listOrgMembers } from "@/lib/api/organizations";
 import { getUser } from "@/lib/api/users";
 import { StatusBadge } from "@/components/status-badge";
+import { AddMemberForm } from "./add-member-form";
+import { DeleteMemberButton } from "./delete-member-button";
 import Link from "next/link";
 import { OrgMember, Organization, User } from "@/lib/api/types";
 
@@ -57,7 +59,10 @@ export default async function OrganizationPage({ params }: { params: Promise<{ i
         </div>
       </div>
 
-      <h2 className="text-base font-medium mb-3">Участники ({members.length})</h2>
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-base font-medium">Участники ({members.length})</h2>
+        <AddMemberForm organizationId={id} />
+      </div>
       {members.length === 0 ? (
         <p className="text-muted-foreground text-sm">Нет участников.</p>
       ) : (
@@ -68,6 +73,7 @@ export default async function OrganizationPage({ params }: { params: Promise<{ i
                 <th className="text-left px-4 py-3 font-medium">Пользователь</th>
                 <th className="text-left px-4 py-3 font-medium">Роль</th>
                 <th className="text-left px-4 py-3 font-medium">Площадка</th>
+                <th className="px-4 py-3" />
               </tr>
             </thead>
             <tbody>
@@ -95,6 +101,9 @@ export default async function OrganizationPage({ params }: { params: Promise<{ i
                       ) : (
                         <span className="text-muted-foreground">—</span>
                       )}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <DeleteMemberButton memberId={m.id} />
                     </td>
                   </tr>
                 );
