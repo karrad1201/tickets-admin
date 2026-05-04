@@ -57,7 +57,7 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
           </div>
         )}
         <DetailRow label="Начало" value={event.time.slice(0, 16).replace("T", " ")} />
-        <Row
+        <DetailRow
           label="Продажи"
           value={event.salesClosedAt ? `Закрыты ${event.salesClosedAt.slice(0, 10)}` : "Открыты"}
         />
