@@ -24,7 +24,10 @@ export function CreateCategoryForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code: code.trim(), label: label.trim() }),
       });
-      if (!res.ok) throw new Error(await res.text());
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.detail ?? body.error ?? `Ошибка ${res.status}`);
+      }
       setCode("");
       setLabel("");
       router.refresh();

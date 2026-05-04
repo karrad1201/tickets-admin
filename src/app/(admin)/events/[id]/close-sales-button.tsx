@@ -15,7 +15,10 @@ export function CloseEventSalesButton({ id }: { id: string }) {
     setError(null);
     try {
       const res = await fetch(`/api/events/${id}/close-sales`, { method: "POST" });
-      if (!res.ok) throw new Error(await res.text());
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.detail ?? body.error ?? `Ошибка ${res.status}`);
+      }
       router.refresh();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Ошибка");
