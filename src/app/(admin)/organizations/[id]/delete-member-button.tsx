@@ -3,9 +3,17 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export function DeleteMemberButton({ memberId }: { memberId: string }) {
+export function DeleteMemberButton({ memberId, isSelf }: { memberId: string; isSelf: boolean }) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  if (isSelf) {
+    return (
+      <span className="text-xs text-muted-foreground opacity-40" title="Нельзя удалить себя">
+        Удалить
+      </span>
+    );
+  }
 
   async function handleDelete() {
     if (!confirm("Удалить участника из организации?")) return;
