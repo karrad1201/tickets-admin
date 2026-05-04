@@ -10,6 +10,7 @@ import { OrgMember, Organization, User } from "@/lib/api/types";
 export default async function OrganizationPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const ctx = await getAuthContext();
+  const currentUserId = ctx.userId;
 
   let org: Organization;
   let members: OrgMember[] = [];
@@ -103,7 +104,7 @@ export default async function OrganizationPage({ params }: { params: Promise<{ i
                       )}
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <DeleteMemberButton memberId={m.id} />
+                      <DeleteMemberButton memberId={m.id} isSelf={m.userId === currentUserId} />
                     </td>
                   </tr>
                 );
