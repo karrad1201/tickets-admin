@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAuthContext } from "@/lib/auth";
 import { closeEventSales } from "@/lib/api/events";
 import { revalidatePath } from "next/cache";
+import { apiErrorResponse } from "@/lib/api-error";
 
 export async function POST(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -11,8 +12,6 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
     revalidatePath("/events");
     return NextResponse.json(result);
   } catch (e) {
-    const msg = e instanceof Error ? e.message : "error";
-    const status = e instanceof Error && "status" in e ? (e as { status: number }).status : 500;
-    return NextResponse.json({ error: msg }, { status });
+    return apiErrorResponse(e);
   }
 }

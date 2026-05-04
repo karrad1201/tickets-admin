@@ -1,3 +1,4 @@
+import { DetailRow } from "@/components/detail-row";
 import { getAuthContext } from "@/lib/auth";
 import { getUser, listUserMemberships } from "@/lib/api/users";
 import { getOrganization } from "@/lib/api/organizations";
@@ -49,9 +50,9 @@ export default async function UserPage({ params }: { params: Promise<{ id: strin
       </div>
       <h1 className="text-2xl font-semibold mb-6">{user.fullName}</h1>
       <div className="rounded-md border divide-y text-sm mb-6">
-        <Row label="ID" value={user.id} mono />
-        <Row label="Телефон" value={user.phone ?? "—"} />
-        <Row label="Email" value={user.email ?? "—"} />
+        <DetailRow label="ID" value={user.id} mono />
+        <DetailRow label="Телефон" value={user.phone ?? "—"} />
+        <DetailRow label="Email" value={user.email ?? "—"} />
         <div className="flex px-4 py-3 gap-4 items-center">
           <span className="w-32 shrink-0 text-muted-foreground">Роль</span>
           <div className="flex items-center gap-3">
@@ -108,11 +109,3 @@ export default async function UserPage({ params }: { params: Promise<{ id: strin
   );
 }
 
-function Row({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
-  return (
-    <div className="flex px-4 py-3 gap-4">
-      <span className="w-32 shrink-0 text-muted-foreground">{label}</span>
-      <span className={mono ? "font-mono text-xs break-all" : ""}>{value}</span>
-    </div>
-  );
-}

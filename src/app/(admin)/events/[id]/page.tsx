@@ -1,3 +1,4 @@
+import { DetailRow } from "@/components/detail-row";
 import { getAuthContext } from "@/lib/auth";
 import { getEvent } from "@/lib/api/events";
 import { getVenue } from "@/lib/api/venues";
@@ -26,7 +27,7 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
       </div>
       <h1 className="text-2xl font-semibold mb-6">{event.label}</h1>
       <div className="rounded-md border divide-y text-sm mb-6">
-        <Row label="ID" value={event.id} mono />
+        <DetailRow label="ID" value={event.id} mono />
         <div className="flex px-4 py-3 gap-4">
           <span className="w-40 shrink-0 text-muted-foreground">Площадка</span>
           {venue ? (
@@ -55,14 +56,14 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
             </Link>
           </div>
         )}
-        <Row label="Начало" value={event.time.slice(0, 16).replace("T", " ")} />
-        <Row
+        <DetailRow label="Начало" value={event.time.slice(0, 16).replace("T", " ")} />
+        <DetailRow
           label="Продажи"
           value={event.salesClosedAt ? `Закрыты ${event.salesClosedAt.slice(0, 10)}` : "Открыты"}
         />
-        {event.ageRating && <Row label="Возраст" value={event.ageRating} />}
-        {event.minPrice != null && <Row label="Цена от" value={`${event.minPrice} ₽`} />}
-        <Row label="Тип мест" value={event.hasSeatMap ? "Схема зала" : "Свободный вход"} />
+        {event.ageRating && <DetailRow label="Возраст" value={event.ageRating} />}
+        {event.minPrice != null && <DetailRow label="Цена от" value={`${event.minPrice} ₽`} />}
+        <DetailRow label="Тип мест" value={event.hasSeatMap ? "Схема зала" : "Свободный вход"} />
         {event.description && (
           <div className="flex px-4 py-3 gap-4">
             <span className="w-40 shrink-0 text-muted-foreground">Описание</span>
@@ -75,11 +76,3 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
   );
 }
 
-function Row({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
-  return (
-    <div className="flex px-4 py-3 gap-4">
-      <span className="w-40 shrink-0 text-muted-foreground">{label}</span>
-      <span className={mono ? "font-mono text-xs break-all" : ""}>{value}</span>
-    </div>
-  );
-}
