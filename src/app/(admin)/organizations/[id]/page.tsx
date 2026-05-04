@@ -1,11 +1,12 @@
 import { getAuthContext } from "@/lib/auth";
 import { getOrganization, listOrgMembers } from "@/lib/api/organizations";
 import { getUser } from "@/lib/api/users";
+import { listVenues } from "@/lib/api/venues";
 import { StatusBadge } from "@/components/status-badge";
 import { AddMemberForm } from "./add-member-form";
 import { DeleteMemberButton } from "./delete-member-button";
 import Link from "next/link";
-import { OrgMember, Organization, User } from "@/lib/api/types";
+import { OrgMember, Organization, User, Venue } from "@/lib/api/types";
 
 export default async function OrganizationPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -29,8 +30,10 @@ export default async function OrganizationPage({ params }: { params: Promise<{ i
     );
   }
 
-  // Загружаем имена пользователей параллельно, fallback на UUID при ошибке
+  // Загружаем имена пользователей и площадки параллельно, fallback при ошибке
   const userMap = new Map<string, User>();
+  const allVenues = await listVenues(ctx).catch(() => [] as Venue[]);
+  const venues = allVenues.filter((v) => v.organizationId === id);
   await Promise.all(
     members.map((m) =>
       getUser(ctx, m.userId)
@@ -61,7 +64,7 @@ export default async function OrganizationPage({ params }: { params: Promise<{ i
 
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-base font-medium">Участники ({members.length})</h2>
-        <AddMemberForm organizationId={id} />
+        <AddMemberForm organizationId={id} venues={venues} />
       </div>
       {members.length === 0 ? (
         <p className="text-muted-foreground text-sm">Нет участников.</p>
