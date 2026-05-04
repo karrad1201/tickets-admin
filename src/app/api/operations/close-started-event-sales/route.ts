@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { apiErrorResponse } from "@/lib/api-error";
 import { getAuthContext } from "@/lib/auth";
 import { closeStartedEventSales } from "@/lib/api/operations";
 
@@ -8,8 +9,8 @@ export async function POST() {
     const result = await closeStartedEventSales(ctx);
     return NextResponse.json(result);
   } catch (e) {
-    const msg = e instanceof Error ? e.message : "error";
-    const status = e instanceof Error && "status" in e ? (e as { status: number }).status : 500;
-    return NextResponse.json({ error: msg }, { status });
+
+
+    return apiErrorResponse(e);
   }
 }

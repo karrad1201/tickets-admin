@@ -1,3 +1,4 @@
+import { DetailRow } from "@/components/detail-row";
 import { getAuthContext } from "@/lib/auth";
 import { getVenueApplication } from "@/lib/api/venue-applications";
 import { StatusBadge } from "@/components/status-badge";
@@ -22,15 +23,15 @@ export default async function VenueApplicationPage({ params }: { params: Promise
       </div>
 
       <div className="rounded-md border divide-y text-sm mb-6">
-        <Row label="ID" value={app.id} mono />
-        <Row label="Город" value={app.cityLabel} />
-        <Row label="Субъект РФ" value={app.subjectLabel} />
-        <Row label="Адрес" value={app.address} />
-        {app.description && <Row label="Описание" value={app.description} />}
-        <Row label="Организация" value={app.organizationId} mono />
-        <Row label="Заявитель" value={app.applicantUserId} mono />
-        <Row label="Дата подачи" value={app.createdAt?.slice(0, 10) ?? "—"} />
-        {app.venueId && <Row label="Созданная площадка" value={app.venueId} mono />}
+        <DetailRow label="ID" value={app.id} mono />
+        <DetailRow label="Город" value={app.cityLabel} />
+        <DetailRow label="Субъект РФ" value={app.subjectLabel} />
+        <DetailRow label="Адрес" value={app.address} />
+        {app.description && <DetailRow label="Описание" value={app.description} />}
+        <DetailRow label="Организация" value={app.organizationId} mono />
+        <DetailRow label="Заявитель" value={app.applicantUserId} mono />
+        <DetailRow label="Дата подачи" value={app.createdAt?.slice(0, 10) ?? "—"} />
+        {app.venueId && <DetailRow label="Созданная площадка" value={app.venueId} mono />}
       </div>
 
       {app.documentUrls.length > 0 && (
@@ -76,11 +77,3 @@ function isSafeUrl(url: string): boolean {
   }
 }
 
-function Row({ label, value, mono }: { label: string; value: React.ReactNode; mono?: boolean }) {
-  return (
-    <div className="flex px-4 py-3 gap-4">
-      <span className="w-40 shrink-0 text-muted-foreground">{label}</span>
-      <span className={mono ? "font-mono text-xs break-all" : ""}>{value}</span>
-    </div>
-  );
-}

@@ -1,3 +1,4 @@
+import { DetailRow } from "@/components/detail-row";
 import { getAuthContext } from "@/lib/auth";
 import { getOrgApplication } from "@/lib/api/org-applications";
 import { StatusBadge } from "@/components/status-badge";
@@ -22,10 +23,10 @@ export default async function OrgApplicationPage({ params }: { params: Promise<{
       </div>
 
       <div className="rounded-md border divide-y text-sm mb-6">
-        <Row label="ID заявки" value={app.id} mono />
-        <Row label="Заявитель" value={app.applicantUserId} mono />
-        <Row label="Дата подачи" value={app.createdAt?.slice(0, 10) ?? "—"} />
-        <Row label="Статус" value={<StatusBadge status={app.status} />} />
+        <DetailRow label="ID заявки" value={app.id} mono />
+        <DetailRow label="Заявитель" value={app.applicantUserId} mono />
+        <DetailRow label="Дата подачи" value={app.createdAt?.slice(0, 10) ?? "—"} />
+        <DetailRow label="Статус" value={<StatusBadge status={app.status} />} />
       </div>
 
       {app.status === "PENDING" && (
@@ -35,11 +36,3 @@ export default async function OrgApplicationPage({ params }: { params: Promise<{
   );
 }
 
-function Row({ label, value, mono }: { label: string; value: React.ReactNode; mono?: boolean }) {
-  return (
-    <div className="flex px-4 py-3 gap-4">
-      <span className="w-40 shrink-0 text-muted-foreground">{label}</span>
-      <span className={mono ? "font-mono text-xs break-all" : ""}>{value}</span>
-    </div>
-  );
-}
