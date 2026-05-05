@@ -5,12 +5,11 @@ const ACCESS_TTL_SECONDS = 15 * 60;
 const REFRESH_TTL_SECONDS = 7 * 24 * 60 * 60;
 const SECURE = process.env.AUTH_COOKIE_SECURE === "true";
 
-export async function GET(req: NextRequest) {
-  const next = req.nextUrl.searchParams.get("next") ?? "/dashboard";
+export async function POST(req: NextRequest) {
   const refreshToken = req.cookies.get("refresh_token")?.value;
 
   if (!refreshToken) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    return NextResponse.json({ error: "no_refresh_token" }, { status: 401 });
   }
 
   try {
@@ -21,21 +20,21 @@ export async function GET(req: NextRequest) {
     });
 
     if (!res.ok) {
-      return NextResponse.redirect(new URL("/login", req.url));
+      return NextResponse.json({ error: "refresh_failed" }, { status: 401 });
     }
 
     const { accessToken, refreshToken: newRefreshToken } = await res.json();
 
-    const redirect = NextResponse.redirect(new URL(next, req.url));
+    const response = NextResponse.json({ ok: true });
     const base = { httpOnly: true, secure: SECURE, sameSite: "strict" as const, path: "/" };
 
-    redirect.cookies.set("auth_token", accessToken, { ...base, maxAge: ACCESS_TTL_SECONDS });
-    redirect.cookies.set("refresh_token", newRefreshToken, { ...base, maxAge: REFRESH_TTL_SECONDS });
+    response.cookies.set("auth_token", accessToken, { ...base, maxAge: ACCESS_TTL_SECONDS });
+    response.cookies.set("refresh_token", newRefreshToken, { ...base, maxAge: REFRESH_TTL_SECONDS });
     const expiresAt = Math.floor(Date.now() / 1000) + ACCESS_TTL_SECONDS - 30;
-    redirect.cookies.set("token_expires_at", String(expiresAt), { ...base, maxAge: REFRESH_TTL_SECONDS });
+    response.cookies.set("token_expires_at", String(expiresAt), { ...base, maxAge: REFRESH_TTL_SECONDS });
 
-    return redirect;
+    return response;
   } catch {
-    return NextResponse.redirect(new URL("/login", req.url));
+    return NextResponse.json({ error: "internal_error" }, { status: 500 });
   }
 }
