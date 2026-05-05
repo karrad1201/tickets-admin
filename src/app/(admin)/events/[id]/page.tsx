@@ -5,6 +5,7 @@ import { getVenue } from "@/lib/api/venues";
 import { getCategory } from "@/lib/api/categories";
 import { getOrganization } from "@/lib/api/organizations";
 import { CloseEventSalesButton } from "./close-sales-button";
+import { InventoryForm } from "./inventory-form";
 import Link from "next/link";
 
 export default async function EventPage({ params }: { params: Promise<{ id: string }> }) {
@@ -19,7 +20,7 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
   ]);
 
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-2xl grid gap-6">
       <div className="mb-4">
         <Link href="/events" className="text-sm text-muted-foreground hover:underline">
           ← События
@@ -72,6 +73,7 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
         )}
       </div>
       {!event.salesClosedAt && <CloseEventSalesButton id={event.id} />}
+      <InventoryForm eventId={event.id} />
     </div>
   );
 }
