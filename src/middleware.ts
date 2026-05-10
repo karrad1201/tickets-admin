@@ -53,7 +53,7 @@ export async function middleware(req: NextRequest) {
   }
 
   // RBAC: только пользователи с ролью ADMIN допускаются в защищённые маршруты
-  const role = getJwtRole(token);
+  const role = req.cookies.get("user_role")?.value;
   if (role !== "ADMIN") {
     return NextResponse.redirect(new URL("/login", req.url));
   }

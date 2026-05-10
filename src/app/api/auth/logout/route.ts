@@ -24,5 +24,6 @@ export async function POST(req: NextRequest) {
   res.cookies.set("refresh_token", "", clear);
   res.cookies.set("user_id", "", clear);
   res.cookies.set("token_expires_at", "", clear);
+  res.cookies.set("user_role", "", clear);
   return res;
 }

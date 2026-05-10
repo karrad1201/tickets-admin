@@ -31,7 +31,7 @@ export default function LoginPage() {
       const saveRes = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ accessToken, refreshToken, userId: user.id }),
+        body: JSON.stringify({ accessToken, refreshToken, userId: user.id, role: user.role }),
       });
       if (!saveRes.ok) throw new Error("Не удалось сохранить сессию");
       window.location.replace("/dashboard");
