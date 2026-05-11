@@ -1,6 +1,6 @@
 import { DetailRow } from "@/components/detail-row";
 import { getAuthContext } from "@/lib/auth";
-import { getEvent } from "@/lib/api/events";
+import { getEvent, getInventoryPlan } from "@/lib/api/events";
 import { getVenue } from "@/lib/api/venues";
 import { getCategory } from "@/lib/api/categories";
 import { getOrganization } from "@/lib/api/organizations";
@@ -13,11 +13,23 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
   const ctx = await getAuthContext();
   const event = await getEvent(ctx, id);
 
-  const [venue, category, organization] = await Promise.all([
+  const [venue, category, organization, plan] = await Promise.all([
     getVenue(ctx, event.venueId).catch(() => null),
     getCategory(ctx, event.categoryId).catch(() => null),
     event.organizationId ? getOrganization(ctx, event.organizationId).catch(() => null) : Promise.resolve(null),
+    getInventoryPlan(ctx, id).catch(() => null),
   ]);
+
+  const sold = plan
+    ? plan.mode === "GENERAL_ADMISSION"
+      ? plan.admissionInventory.reduce((s, t) => s + t.sold, 0)
+      : plan.seatInventory.filter((s) => s.status === "SOLD").length
+    : null;
+  const capacity = plan
+    ? plan.mode === "GENERAL_ADMISSION"
+      ? plan.admissionInventory.reduce((s, t) => s + t.capacity, 0)
+      : plan.seatInventory.length
+    : null;
 
   return (
     <div className="max-w-2xl grid gap-6">
@@ -72,6 +84,38 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
           </div>
         )}
       </div>
+      {plan && sold !== null && capacity !== null && (
+        <div className="rounded-md border p-4">
+          <p className="text-sm font-medium mb-3">Статистика продаж</p>
+          <div className="flex items-center gap-4 mb-2">
+            <span className="text-2xl font-semibold">{sold}</span>
+            <span className="text-muted-foreground text-sm">/ {capacity} билетов продано</span>
+            {capacity > 0 && (
+              <span className="ml-auto text-sm font-medium text-primary">
+                {Math.round((sold / capacity) * 100)}%
+              </span>
+            )}
+          </div>
+          {capacity > 0 && (
+            <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+              <div
+                className="h-full bg-primary rounded-full transition-all"
+                style={{ width: `${Math.min(100, Math.round((sold / capacity) * 100))}%` }}
+              />
+            </div>
+          )}
+          {plan.mode === "GENERAL_ADMISSION" && plan.admissionInventory.length > 1 && (
+            <div className="mt-3 divide-y text-sm">
+              {plan.admissionInventory.map((t) => (
+                <div key={t.ticketTypeId} className="flex justify-between py-1.5">
+                  <span className="text-muted-foreground">{t.label}</span>
+                  <span>{t.sold} / {t.capacity}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
       {!event.salesClosedAt && <CloseEventSalesButton id={event.id} />}
       <InventoryForm eventId={event.id} />
     </div>

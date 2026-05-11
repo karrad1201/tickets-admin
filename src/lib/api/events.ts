@@ -42,3 +42,14 @@ export const createInventory = (ctx: AuthContext, eventId: string, body: CreateI
     body: JSON.stringify(body),
     cache: "no-store",
   });
+
+export interface InventoryPlan {
+  mode: "GENERAL_ADMISSION" | "SEATED";
+  admissionInventory: { ticketTypeId: string; label: string; price: number; capacity: number; sold: number; available: number }[];
+  seatInventory: { seatNumber: string; status: "AVAILABLE" | "RESERVED" | "SOLD" }[];
+}
+
+export const getInventoryPlan = (ctx: AuthContext, eventId: string) =>
+  apiFetch<InventoryPlan>(`/api/v1/inventory-plans/${eventId}`, backendHeaders(ctx), {
+    cache: "no-store",
+  });
