@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const PUBLIC_PATHS = ["/login", "/apply", "/api/auth/login", "/api/auth/logout", "/api/auth/refresh", "/api/health", "/api/admin/login", "/api/apply"];
+const PUBLIC_PATHS = ["/", "/login", "/apply", "/api/auth/login", "/api/auth/logout", "/api/auth/refresh", "/api/health", "/api/admin/login", "/api/apply", "/api/public"];
 
 const BASE = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8080";
 const ACCESS_TTL_SECONDS = 15 * 60;
