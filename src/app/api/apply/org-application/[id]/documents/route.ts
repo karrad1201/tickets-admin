@@ -16,7 +16,6 @@ export async function POST(
     {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
-      // @ts-expect-error — FormData is acceptable here
       body: formData,
       cache: "no-store",
     }
