@@ -49,7 +49,7 @@ export default function LandingPage() {
             className="font-bold text-lg tracking-tight"
             style={{ color: "#FF6B35" }}
           >
-            Karrad
+            Визит Калмыкия
           </span>
         </div>
       </header>
@@ -406,10 +406,13 @@ export default function LandingPage() {
       >
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <span className="font-bold text-base" style={{ color: "#FF6B35" }}>
-            Karrad
+            Визит Калмыкия
           </span>
           <p style={{ color: "rgba(255,255,255,0.25)", fontSize: "0.8rem" }}>
-            © {new Date().getFullYear()} Karrad. Билеты на события Калмыкии.
+            © {new Date().getFullYear()} Визит Калмыкия. Билеты на события Калмыкии.
+          </p>
+          <p style={{ color: "rgba(255,255,255,0.12)", fontSize: "0.72rem" }}>
+            Разработано karrad
           </p>
           <Link
             href="/apply"
